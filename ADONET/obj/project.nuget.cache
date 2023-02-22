@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eZjph/2WczJf3v3eq9TpvAnIZOqBATITVX22ZkiPZnhR10OpcKfobNwYmROaGRRkPZNTqbapkkV/BnC+727syQ==",
+  "dgSpecHash": "PQQCZs6Sak12oqk2yruGTl1T31znJ51WhP8hu6C2C28lg4z3VPOmyf4Jt2/sz/OYzIwcHomKaMoeXQOQALTVHA==",
   "success": true,
-  "projectFilePath": "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj",
+  "projectFilePath": "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bst\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Bst\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kxcZqUmP4siEqxGfD4F64cXc+32u/CqC2l7b7QGr7bvSUDnYv95agfeujA2tT2Q0hOgc3U2t9xxLZzoFChCl2g==",
+  "dgSpecHash": "1/X48jn+Y+A7TCitnMVluuvXalsrbCw+/MUshQxtu8VjCZuR16jg6wHtM2/YcQANKW4Qwrg/PbnZuSmZmms/qg==",
   "success": true,
-  "projectFilePath": "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\EntityFrameworkCoreExersise\\EntityFrameworkIntroduction.csproj",
+  "projectFilePath": "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\EntityFrameworkCoreExersise\\EntityFrameworkIntroduction.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Bst\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Bst\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

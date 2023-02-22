@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj": {}
+    "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj": {}
   },
   "projects": {
-    "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj": {
+    "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj",
+        "projectUniqueName": "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj",
         "projectName": "ADONET",
-        "projectPath": "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj",
+        "projectPath": "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\ADONET\\ADONET.csproj",
         "packagesPath": "C:\\Users\\Bst\\.nuget\\packages\\",
-        "outputPath": "D:\\Visual Studio\\Projects\\Entity Framework Core\\EntityFrameWork Exersices\\ADONET\\obj\\",
+        "outputPath": "D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\ADONET\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Bst\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -61,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
