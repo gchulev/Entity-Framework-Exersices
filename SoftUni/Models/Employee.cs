@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Softuni.Models
+namespace SoftUni.Models
 {
     public partial class Employee
     {
@@ -13,6 +13,7 @@ namespace Softuni.Models
             Departments = new HashSet<Department>();
             InverseManager = new HashSet<Employee>();
             Projects = new HashSet<Project>();
+            EmployeesProjects = new HashSet<EmployeeProject>();
         }
 
         [Key]
@@ -58,5 +59,6 @@ namespace Softuni.Models
         [ForeignKey("EmployeeId")]
         [InverseProperty(nameof(Project.Employees))]
         public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<EmployeeProject> EmployeesProjects { get; set; }
     }
 }

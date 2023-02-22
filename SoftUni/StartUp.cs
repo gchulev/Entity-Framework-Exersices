@@ -1,13 +1,13 @@
 ﻿using System.Text;
-using Softuni.Data;
+using SoftUni.Data;
 
-namespace Softuni
+namespace SoftUni
 {
     public class StartUp
     {
-        public static Task<string> GetEmployeesFullInformationAsync(SoftUniContext context)
+        public static string GetEmployeesFullInformation(SoftUniContext context)
         {
-            var result =  context.Employees
+            var result = context.Employees
                 .OrderBy(e => e.EmployeeId)
                 .Select(e => new
                 {
@@ -16,7 +16,8 @@ namespace Softuni
                     MiddleName = e.MiddleName,
                     JobTitle = e.JobTitle,
                     Salary = Math.Round(e.Salary, 2)
-                }).ToList();
+                })
+                .ToList();
 
             var sb = new StringBuilder();
 
@@ -24,7 +25,7 @@ namespace Softuni
             {
                 sb.AppendLine($"{emp.LastName} {emp.FirstName} {emp.MiddleName} {emp.JobTitle} {emp.Salary:f2}");
             }
-            return Task.FromResult(sb.ToString().TrimEnd());
+            return sb.ToString().TrimEnd();
         }
     }
 }

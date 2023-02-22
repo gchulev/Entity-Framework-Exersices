@@ -1,11 +1,9 @@
-﻿
-using Softuni;
-using Softuni.Data;
+﻿using SoftUni;
+using SoftUni.Data;
+using SoftUni.Models;
 
-using (SoftUniContext context = new SoftUniContext())
+using (var context = new SoftUniContext())
 {
-    string result = await StartUp.GetEmployeesFullInformationAsync(context);
-
+    var result = StartUp.GetEmployeesFullInformation(context);
     Console.WriteLine(result);
-
 }

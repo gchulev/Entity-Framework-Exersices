@@ -1,7 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Softuni.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 
-namespace Softuni.Data
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+
+using SoftUni.Models;
+
+namespace SoftUni.Data
 {
     public partial class SoftUniContext : DbContext
     {
@@ -24,7 +30,7 @@ namespace Softuni.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=SoftUni;TrustServerCertificate=True;Integrated Security=True;");
+                optionsBuilder.UseSqlServer(@"Server=.\\SQLEXPRESS;Database=SoftUni;Integrated Security=True;TrustServerCertificate=true");
             }
         }
 
@@ -82,6 +88,9 @@ namespace Softuni.Data
                             j.IndexerProperty<int>("ProjectId").HasColumnName("ProjectID");
                         });
             });
+
+            modelBuilder.Entity<EmployeeProject>(entity =>
+            entity.HasKey(e => new { e.EmployeeID, e.ProjectID }));
 
             OnModelCreatingPartial(modelBuilder);
         }
