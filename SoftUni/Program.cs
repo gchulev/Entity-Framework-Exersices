@@ -4,6 +4,8 @@ using SoftUni.Data;
 
 using (var context = new SoftUniContext())
 {
-    string result = StartUp.GetEmployeesFullInformation(context);
-    Console.WriteLine(result);
+    string employeesFullInfo = StartUp.GetEmployeesFullInformation(context);
+
+    string employeesWithSalaryBiggerThan50000 = StartUp.GetEmployeesWithSalaryOver50000(context);
+    Console.WriteLine(employeesWithSalaryBiggerThan50000);
 }
