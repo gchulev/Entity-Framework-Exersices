@@ -7,5 +7,10 @@ using (var context = new SoftUniContext())
     string employeesFullInfo = StartUp.GetEmployeesFullInformation(context);
 
     string employeesWithSalaryBiggerThan50000 = StartUp.GetEmployeesWithSalaryOver50000(context);
-    Console.WriteLine(employeesWithSalaryBiggerThan50000);
+
+    string employeesFromResearchAndDevelopment = StartUp.GetEmployeesFromResearchAndDevelopment(context);
+
+
+
+    Console.WriteLine(employeesFromResearchAndDevelopment);
 }
