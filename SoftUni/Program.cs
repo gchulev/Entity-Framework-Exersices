@@ -12,7 +12,9 @@ using (var context = new SoftUniContext())
 
     //string addressTextResult = StartUp.AddNewAddressToEmployee(context).TrimEnd();
 
-    string employeesInPeriod = StartUp.GetEmployeesInPeriod(context);
+    //string employeesInPeriod = StartUp.GetEmployeesInPeriod(context);
 
-    Console.WriteLine(employeesInPeriod);
+    string employee147 = StartUp.GetEmployee147(context);
+
+    Console.WriteLine(employee147);
 }
