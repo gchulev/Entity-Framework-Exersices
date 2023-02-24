@@ -18,5 +18,7 @@ using (var context = new SoftUniContext())
 
     //string employee147 = StartUp.GetEmployee147(context);
 
-    Console.WriteLine(addressesByTown);
+    string deparmtentsWithMorethan5Employees = StartUp.GetDepartmentsWithMoreThan5Employees(context);
+
+    Console.WriteLine(deparmtentsWithMorethan5Employees);
 }
