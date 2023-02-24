@@ -140,6 +140,31 @@ namespace SoftUni
             return sb.ToString().TrimEnd();
         }
 
+        public static string GetAddressesByTown(SoftUniContext context)
+        {
+            var addresses = context.Addresses
+                .OrderByDescending(a => a.Employees.Count)
+                .ThenBy(a => a.Town!.Name)
+                .ThenBy(a => a.AddressText)
+                .Select(a => new
+                {
+                    a.AddressText,
+                    TownName = a.Town!.Name,
+                    a.Employees,
+                })
+                .Take(10)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var address in addresses)
+            {
+                sb.AppendLine($"{address.AddressText}, {address.TownName} - {address.Employees.Count} employees");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
         public static string GetEmployee147(SoftUniContext context)
         {
             var result = context.Employees
