@@ -24,7 +24,9 @@ using (var context = new SoftUniContext())
 
     //string employeesWithIncreasedSalaries = StartUp.IncreaseSalaries(context);
 
-    string employeesWithNameStartingWithSA = StartUp.GetEmployeesByFirstNameStartingWithSa(context);
+    //string employeesWithNameStartingWithSA = StartUp.GetEmployeesByFirstNameStartingWithSa(context);
 
-    Console.WriteLine(employeesWithNameStartingWithSA);
+    string tenProjects = StartUp.DeleteProjectById(context);
+
+    Console.WriteLine(tenProjects);
 }

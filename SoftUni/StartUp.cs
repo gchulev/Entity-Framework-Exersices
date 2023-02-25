@@ -300,5 +300,27 @@ namespace SoftUni
 
             return sb.ToString().TrimEnd();
         }
+
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            EmployeeProject[] employeeProjectsToRemove = context.EmployeesProjects.Where(ep => ep.ProjectId == 2).ToArray();
+            context.EmployeesProjects.RemoveRange(employeeProjectsToRemove);
+
+            Project projectsToRemove = context.Projects.Find(2)!;
+            context.Projects.Remove(projectsToRemove);
+
+            context.SaveChanges();
+
+            var tenProjects = context.Projects.Take(10).ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var p in tenProjects)
+            {
+                sb.AppendLine($"{p.Name}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
     }
 }
