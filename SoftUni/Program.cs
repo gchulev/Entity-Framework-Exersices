@@ -20,7 +20,9 @@ using (var context = new SoftUniContext())
 
     //string deparmtentsWithMorethan5Employees = StartUp.GetDepartmentsWithMoreThan5Employees(context);
 
-    string last10Projects = StartUp.GetLatestProjects(context);
+    //string last10Projects = StartUp.GetLatestProjects(context);
 
-    Console.WriteLine(last10Projects);
+    string employeesWithIncreasedSalaries = StartUp.IncreaseSalaries(context);
+
+    Console.WriteLine(employeesWithIncreasedSalaries);
 }
