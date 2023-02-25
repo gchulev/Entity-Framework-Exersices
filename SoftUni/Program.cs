@@ -22,7 +22,9 @@ using (var context = new SoftUniContext())
 
     //string last10Projects = StartUp.GetLatestProjects(context);
 
-    string employeesWithIncreasedSalaries = StartUp.IncreaseSalaries(context);
+    //string employeesWithIncreasedSalaries = StartUp.IncreaseSalaries(context);
 
-    Console.WriteLine(employeesWithIncreasedSalaries);
+    string employeesWithNameStartingWithSA = StartUp.GetEmployeesByFirstNameStartingWithSa(context);
+
+    Console.WriteLine(employeesWithNameStartingWithSA);
 }

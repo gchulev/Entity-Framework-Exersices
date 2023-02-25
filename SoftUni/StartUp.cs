@@ -273,5 +273,32 @@ namespace SoftUni
 
             return sb.ToString().TrimEnd();
         }
+
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            var employeesWithNameStartingWithSA = context.Employees
+                .AsNoTracking()
+                .ToList()
+                .Where(e => e.FirstName.StartsWith("Sa", StringComparison.Ordinal))
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    e.JobTitle,
+                    e.Salary
+                })
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var e in employeesWithNameStartingWithSA)
+            {
+                sb.AppendLine($"{e.FirstName} {e.LastName} - {e.JobTitle} - (${e.Salary:f2})");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
     }
 }
