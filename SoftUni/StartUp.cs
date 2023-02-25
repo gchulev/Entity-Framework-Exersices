@@ -249,24 +249,30 @@ namespace SoftUni
         {
             string[] departmentList = new string[] { "Engineering", "Tool Design", "Marketing", "Information Services" };
 
-            var employeesWithIncreasedSalary = context.Employees
-                .Where(e => departmentList.Contains(e.Department.Name))
-                .Select(e => new
-                {
-                    e.FirstName,
-                    e.LastName,
-                    Salary = e.Salary * 1.12m
-                })
-                .OrderBy(x => x.FirstName)
-                .ThenBy(e => e.LastName)
-                .ToArray();
+            //var employeesWithIncreasedSalary = context.Employees
+            //    .Where(e => departmentList.Contains(e.Department.Name))
+            //    .Select(e => new
+            //    {
+            //        e.FirstName,
+            //        e.LastName,
+            //        Salary = e.Salary * 1.12m
+            //    })
+            //    .OrderBy(x => x.FirstName)
+            //    .ThenBy(e => e.LastName)
+            //    .ToArray();
 
-            // Not commiting changes here
+            List<Employee> employeesWithIncreasedSalary = context.Employees
+                .Where(e => departmentList.Contains(e.Department.Name))
+                .ToList();
+
+            employeesWithIncreasedSalary.Select(e => e.Salary *= 1.12m).ToList();
+
+            // Comented so we don't change the Db.
             //context.SaveChanges();
 
             var sb = new StringBuilder();
 
-            foreach (var e in employeesWithIncreasedSalary)
+            foreach (var e in employeesWithIncreasedSalary.OrderBy(e => e.FirstName).ThenBy(e => e.LastName))
             {
                 sb.AppendLine($"{e.FirstName} {e.LastName} (${e.Salary:f2})");
             }
@@ -319,6 +325,40 @@ namespace SoftUni
             {
                 sb.AppendLine($"{p.Name}");
             }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string RemoveTown(SoftUniContext context)
+        {
+            List<int> townsIdToRemove = context.Towns.Where(t => t.Name == "Seattle")
+                .ToList()
+                .Select(t => t.TownId)
+                .ToList();
+
+            List<int> addressesIdsToRemove = context.Addresses
+                .Where(a => townsIdToRemove.Contains((int)a.TownId!))
+                .Select(a => new { a.AddressId })
+                .ToList()
+                .Select(a => a.AddressId)
+                .ToList();
+
+
+            Employee[] employeeIdsWhosAddressShouldBeSetToNull = context.Employees
+                .Where(e => addressesIdsToRemove.Contains((int)e.AddressId!))
+                .ToArray();
+
+            employeeIdsWhosAddressShouldBeSetToNull.Select(e => e.AddressId = null);
+
+            context.Addresses.RemoveRange(context.Addresses.Where(a => addressesIdsToRemove.Contains(a.AddressId)));
+
+            context.RemoveRange(context.Towns.Where(t => townsIdToRemove.Contains(t.TownId)));
+
+            //context.SaveChanges();
+
+            var sb = new StringBuilder();
+
+            sb.Append($"{addressesIdsToRemove.Count} addresses in Seattle were deleted");
 
             return sb.ToString().TrimEnd();
         }
