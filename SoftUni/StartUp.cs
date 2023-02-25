@@ -223,5 +223,26 @@ namespace SoftUni
 
             return sb.ToString().TrimEnd();
         }
+
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            List<Project> latestProjects = context.Projects
+                .OrderByDescending(p => p.StartDate)
+                .Take(10)
+                .ToList();
+
+            latestProjects.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            var sb = new StringBuilder();
+
+            foreach (Project project in latestProjects)
+            {
+                sb.AppendLine($"{project.Name}");
+                sb.AppendLine($"{project.Description}");
+                sb.AppendLine($"{project.StartDate.ToString("M/d/yyyy h:mm:ss tt")}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
     }
 }

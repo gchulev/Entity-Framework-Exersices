@@ -14,11 +14,13 @@ using (var context = new SoftUniContext())
 
     //string employeesInPeriod = StartUp.GetEmployeesInPeriod(context);
 
-    string addressesByTown = StartUp.GetAddressesByTown(context);
+    //string addressesByTown = StartUp.GetAddressesByTown(context);
 
     //string employee147 = StartUp.GetEmployee147(context);
 
-    string deparmtentsWithMorethan5Employees = StartUp.GetDepartmentsWithMoreThan5Employees(context);
+    //string deparmtentsWithMorethan5Employees = StartUp.GetDepartmentsWithMoreThan5Employees(context);
 
-    Console.WriteLine(deparmtentsWithMorethan5Employees);
+    string last10Projects = StartUp.GetLatestProjects(context);
+
+    Console.WriteLine(last10Projects);
 }
