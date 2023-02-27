@@ -5,6 +5,7 @@
         public Game()
         {
             this.PlayersStatistics = new HashSet<PlayerStatistic>();
+            this.Bets = new HashSet<Bet>();
         }
         public int GameId { get; set; }
         public int HomeTeamId { get; set; }
@@ -18,7 +19,8 @@
         public double AwayTeamBetRate { get; set; }
         public double DrawBetRate { get; set; }
         public string? Result { get; set; }
+        public Bet Bet { get; set; } = null!;
         public ICollection<PlayerStatistic> PlayersStatistics { get; set; }
-        public Bet? Bet { get; set; }
+        public ICollection<Bet> Bets { get; set; }
     }
 }

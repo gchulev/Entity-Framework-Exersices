@@ -12,7 +12,7 @@
         public string Name { get; set; } = null!;
         public string? LogoUrl { get; set; }
         public string? Initials { get; set; }
-        public double Budget { get; set; }
+        public decimal Budget { get; set; }
         public int PrimaryKitColorId { get; set; }
         public Color? PrimaryKitColor { get; set; }
         public int SecondaryKitColorId { get; set; }
