@@ -21,6 +21,7 @@ namespace P01_HospitalDatabase.Data
         public DbSet<Patient> Patients { get; set; } = null!;
         public DbSet<Visitation> Visitations { get; set; } = null!;
         public DbSet<PatientMedicament> PatientsMedicaments { get; set; } = null!;
+        public DbSet<Doctor> Doctors { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -68,6 +69,10 @@ namespace P01_HospitalDatabase.Data
                 .HasColumnType("NVARCHAR(250)");
 
                 entity.HasKey(v => v.VisitationId);
+
+                entity.HasOne(v => v.Doctor)
+                .WithMany(d => d.Visitations)
+                .HasForeignKey(v => v.DoctorId);
             });
 
             modelBuilder.Entity<Diagnose>(entity =>
