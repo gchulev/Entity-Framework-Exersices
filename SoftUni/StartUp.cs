@@ -263,6 +263,8 @@ namespace SoftUni
 
             List<Employee> employeesWithIncreasedSalary = context.Employees
                 .Where(e => departmentList.Contains(e.Department.Name))
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
                 .ToList();
 
             employeesWithIncreasedSalary.Select(e => e.Salary *= 1.12m).ToList();
@@ -272,7 +274,7 @@ namespace SoftUni
 
             var sb = new StringBuilder();
 
-            foreach (var e in employeesWithIncreasedSalary.OrderBy(e => e.FirstName).ThenBy(e => e.LastName))
+            foreach (var e in employeesWithIncreasedSalary)
             {
                 sb.AppendLine($"{e.FirstName} {e.LastName} (${e.Salary:f2})");
             }

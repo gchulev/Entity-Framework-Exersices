@@ -145,11 +145,11 @@ namespace SoftUni.Data
                 entity.HasKey(pk => new { pk.EmployeeId, pk.ProjectId });
 
                 entity.HasOne(ep => ep.Employee)
-                .WithMany(ep => ep.EmployeesProjects)
+                .WithMany(e => e.EmployeesProjects)
                 .HasForeignKey(ep => ep.EmployeeId);
 
                 entity.HasOne(ep => ep.Project)
-                .WithMany(ep => ep.EmployeesProjects)
+                .WithMany(p => p.EmployeesProjects)
                 .HasForeignKey(ep => ep.ProjectId);
             });
 

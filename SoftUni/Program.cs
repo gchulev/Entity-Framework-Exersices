@@ -22,13 +22,13 @@ using (var context = new SoftUniContext())
 
     //string last10Projects = StartUp.GetLatestProjects(context);
 
-    string employeesWithIncreasedSalaries = StartUp.IncreaseSalaries(context);
+    //string employeesWithIncreasedSalaries = StartUp.IncreaseSalaries(context);
 
     //string employeesWithNameStartingWithSA = StartUp.GetEmployeesByFirstNameStartingWithSa(context);
 
     //string tenProjects = StartUp.DeleteProjectById(context);
 
-    //string removedAddressesInfo = StartUp.RemoveTown(context);
+    string removedAddressesInfo = StartUp.RemoveTown(context);
 
-    Console.WriteLine(employeesWithIncreasedSalaries);
+    Console.WriteLine(removedAddressesInfo);
 }
