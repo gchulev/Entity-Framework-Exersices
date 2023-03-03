@@ -21,9 +21,12 @@
             //string cmd = Console.ReadLine()!;
 
             //Console.WriteLine(GetBooksByAgeRestriction(db, cmd));
-            //Console.WriteLine(GetGoldenBooks(db));
-            Console.WriteLine(GetBooksByPrice(db));
 
+            //Console.WriteLine(GetGoldenBooks(db));
+
+            //Console.WriteLine(GetBooksByPrice(db));
+
+            Console.WriteLine(GetBooksNotReleasedIn(db, 1998));
 
         }
 
@@ -72,6 +75,18 @@
                 sb.AppendLine($"{book.Title} - ${book.Price:f2}");
             }
             return sb.ToString().TrimEnd();
+        }
+
+        public static string GetBooksNotReleasedIn(BookShopContext context, int year)
+        {
+            var booksInfo = context.Books
+                .AsNoTracking()
+                .Where(b => b.ReleaseDate!.Value.Year != year)
+                .OrderBy(b => b.BookId)
+                .Select(b => b.Title)
+                .ToArray();
+
+            return string.Join(Environment.NewLine, booksInfo).Trim();
         }
     }
 }
