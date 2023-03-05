@@ -38,7 +38,9 @@
 
             //Console.WriteLine(GetAuthorNamesEndingIn(db, "sK"));
 
-            Console.WriteLine(GetBookTitlesContaining(db, "WOR"));
+            //Console.WriteLine(GetBookTitlesContaining(db, "WOR"));
+
+            Console.WriteLine(GetBooksByAuthor(db, "po"));
 
         }
 
@@ -177,6 +179,29 @@
                 .ToArray();
 
             return string.Join(Environment.NewLine, titles).TrimEnd();
+        }
+
+        public static string GetBooksByAuthor(BookShopContext context, string input)
+        {
+            var booksInfo = context.Books
+                .Where(b => EF.Functions.Like(b.Author.LastName, $"{input}%"))
+                .Select(b => new
+                {
+                    b.Title,
+                    AuthorNames = $"{b.Author.FirstName} {b.Author.LastName}",
+                    b.BookId
+                })
+                .OrderBy(b => b.BookId)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var book in booksInfo)
+            {
+                sb.AppendLine($"{book.Title} ({book.AuthorNames})");
+            }
+
+            return sb.ToString().TrimEnd();
         }
     }
 }
