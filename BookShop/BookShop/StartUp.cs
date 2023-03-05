@@ -36,7 +36,9 @@
 
             //Console.WriteLine(GetBooksReleasedBefore(db, "12-04-1992"));
 
-            Console.WriteLine(GetAuthorNamesEndingIn(db, "sK"));
+            //Console.WriteLine(GetAuthorNamesEndingIn(db, "sK"));
+
+            Console.WriteLine(GetBookTitlesContaining(db, "WOR"));
 
         }
 
@@ -164,6 +166,17 @@
 
             return sb.ToString().TrimEnd();
 
+        }
+
+        public static string GetBookTitlesContaining(BookShopContext context, string input)
+        {
+            var titles = context.Books
+                .Where(b => EF.Functions.Like(b.Title, $"%{input}%"))
+                .Select(b => b.Title)
+                .OrderBy(t => t)
+                .ToArray();
+
+            return string.Join(Environment.NewLine, titles).TrimEnd();
         }
     }
 }
