@@ -1,9 +1,12 @@
 ﻿namespace BookShop
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Text;
 
     using BookShop.Models.Enums;
+
+    using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 
     using Data;
 
@@ -31,7 +34,9 @@
 
             //Console.WriteLine(GetBooksByCategory(db, "horror mystery drama"));
 
-            Console.WriteLine(GetBooksReleasedBefore(db, "12-04-1992"));
+            //Console.WriteLine(GetBooksReleasedBefore(db, "12-04-1992"));
+
+            Console.WriteLine(GetAuthorNamesEndingIn(db, "sK"));
 
         }
 
@@ -137,6 +142,28 @@
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        public static string GetAuthorNamesEndingIn(BookShopContext context, string input)
+        {
+            var authorNames = context.Authors
+                .Where(a => EF.Functions.Like(a.FirstName, $"%{input}"))
+                .Select(a => new
+                {
+                    FullName = a.FirstName + ' ' + a.LastName
+                })
+                .OrderBy(a => a.FullName)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var item in authorNames)
+            {
+                sb.AppendLine(item.FullName);
+            }
+
+            return sb.ToString().TrimEnd();
+
         }
     }
 }
