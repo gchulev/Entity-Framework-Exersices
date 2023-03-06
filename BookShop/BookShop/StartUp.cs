@@ -47,7 +47,9 @@
 
             //Console.WriteLine(CountCopiesByAuthor(db));
 
-            Console.WriteLine(GetTotalProfitByCategory(db));
+            //Console.WriteLine(GetTotalProfitByCategory(db));
+
+            Console.WriteLine(GetMostRecentBooks(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -256,6 +258,35 @@
             foreach (var c in result)
             {
                 sb.AppendLine($"{c.Name} ${c.TotalProfit:f2}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GetMostRecentBooks(BookShopContext context)
+        {
+            var mostRecentBooks = context.Categories
+                .AsNoTracking()
+                .Select(c => new
+                {
+                    c.Name,
+                    Books = c.CategoryBooks.Select(cb => cb.Book)
+                        .OrderByDescending(b => b.ReleaseDate)
+                        .Take(3)
+                })
+                .OrderBy(c => c.Name)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var c in mostRecentBooks)
+            {
+                sb.AppendLine($"--{c.Name}");
+
+                foreach (var b in c.Books)
+                {
+                    sb.AppendLine($"{b.Title} ({b.ReleaseDate!.Value.Year})");
+                }
             }
 
             return sb.ToString().TrimEnd();
