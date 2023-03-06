@@ -40,7 +40,9 @@
 
             //Console.WriteLine(GetBookTitlesContaining(db, "WOR"));
 
-            Console.WriteLine(GetBooksByAuthor(db, "po"));
+            //Console.WriteLine(GetBooksByAuthor(db, "po"));
+
+            Console.WriteLine($"There are {CountBooks(db, 40)} books with longer title than 40 symbols" );
 
         }
 
@@ -202,6 +204,14 @@
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        public static int CountBooks(BookShopContext context, int lengthCheck)
+        {
+            int booksCount = context.Books
+                .Count(b => b.Title.Length > lengthCheck);
+
+            return booksCount;
         }
     }
 }
