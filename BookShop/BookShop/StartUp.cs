@@ -20,7 +20,7 @@
         public static void Main()
         {
             using var db = new BookShopContext();
-            //DbInitializer.ResetDatabase(db);
+            DbInitializer.ResetDatabase(db);
 
             //Console.Write("Enter age restriction: ");
             //string cmd = Console.ReadLine()!;
@@ -51,9 +51,9 @@
 
             //Console.WriteLine(GetMostRecentBooks(db));
 
-            IncreasePrices(db);
+            //IncreasePrices(db);
 
-
+            //Console.WriteLine(RemoveBooks(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -306,6 +306,17 @@
                 book.Price += 5;
             }
             context.SaveChanges();
+        }
+
+        public static int RemoveBooks(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(b => b.Copies < 4200)
+                .ToArray();
+            context.RemoveRange(books);
+            context.SaveChanges();
+
+            return books.Length;
         }
     }
 }
