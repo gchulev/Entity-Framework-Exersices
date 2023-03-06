@@ -45,7 +45,9 @@
 
             //Console.WriteLine($"There are {CountBooks(db, 40)} books with longer title than 40 symbols" );
 
-            Console.WriteLine(CountCopiesByAuthor(db));
+            //Console.WriteLine(CountCopiesByAuthor(db));
+
+            Console.WriteLine(GetTotalProfitByCategory(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -232,6 +234,28 @@
             foreach (var copy in totalCopiesByAuthor)
             {
                 sb.AppendLine($"{copy.AuthorName} - {copy.TotalCopies}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GetTotalProfitByCategory(BookShopContext context)
+        {
+            var result = context.Categories
+                .Select(c => new
+                {
+                    c.Name,
+                    TotalProfit = c.CategoryBooks.Select(cb => cb.Book.Copies * cb.Book.Price).Sum()
+                })
+                .OrderByDescending(c => c.TotalProfit)
+                .ThenBy(c => c.Name)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var c in result)
+            {
+                sb.AppendLine($"{c.Name} ${c.TotalProfit:f2}");
             }
 
             return sb.ToString().TrimEnd();
