@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
+    using System.Net.WebSockets;
     using System.Text;
 
     using BookShop.Models.Enums;
@@ -42,8 +43,9 @@
 
             //Console.WriteLine(GetBooksByAuthor(db, "po"));
 
-            Console.WriteLine($"There are {CountBooks(db, 40)} books with longer title than 40 symbols" );
+            //Console.WriteLine($"There are {CountBooks(db, 40)} books with longer title than 40 symbols" );
 
+            Console.WriteLine(CountCopiesByAuthor(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -212,6 +214,27 @@
                 .Count(b => b.Title.Length > lengthCheck);
 
             return booksCount;
+        }
+
+        public static string CountCopiesByAuthor(BookShopContext context)
+        {
+            var totalCopiesByAuthor = context.Authors
+                .Select(a => new
+                {
+                    AuthorName = $"{a.FirstName} {a.LastName}",
+                    TotalCopies = a.Books.Select(b => b.Copies).Sum()
+                })
+                .OrderByDescending(a => a.TotalCopies)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            foreach (var copy in totalCopiesByAuthor)
+            {
+                sb.AppendLine($"{copy.AuthorName} - {copy.TotalCopies}");
+            }
+
+            return sb.ToString().TrimEnd();
         }
     }
 }
