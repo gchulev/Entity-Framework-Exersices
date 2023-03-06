@@ -49,7 +49,11 @@
 
             //Console.WriteLine(GetTotalProfitByCategory(db));
 
-            Console.WriteLine(GetMostRecentBooks(db));
+            //Console.WriteLine(GetMostRecentBooks(db));
+
+            IncreasePrices(db);
+
+
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -290,6 +294,18 @@
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        public static void IncreasePrices(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(b => b.ReleaseDate!.Value.Year < 2015)
+                .ToArray();
+            foreach (var book in books)
+            {
+                book.Price += 5;
+            }
+            context.SaveChanges();
         }
     }
 }
