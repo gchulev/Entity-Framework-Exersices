@@ -117,7 +117,7 @@
 
         public static string GetBooksByCategory(BookShopContext context, string input)
         {
-            string[] categoriesList = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string[] categoriesList = input.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             var titles = context.Books
                 .Select(b => new
