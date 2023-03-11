@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 using ProductShop.Data;
+using ProductShop.DTOs.Export;
 using ProductShop.DTOs.Import;
 using ProductShop.Models;
 
@@ -20,8 +23,8 @@ namespace ProductShop
                 //ImportProducts(context, inputJson);
                 //ImportCategories(context, inputJson);
                 //ImportCategoryProducts(context, inputJson);
-                
 
+                Console.WriteLine(GetProductsInRange(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -88,6 +91,27 @@ namespace ProductShop
             context.SaveChanges();
 
             return $"Successfully imported {categoryProducts.Length}";
+        }
+
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            var mapper = ProvideMapper();
+
+            ExportProductDto[] productsToExport = context.Products
+                .Where(p => p.Price >= 500 && p.Price <= 1000)
+                .OrderBy(p => p.Price)
+                .ProjectTo<ExportProductDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            string jsonExport = JsonConvert.SerializeObject(productsToExport, new JsonSerializerSettings()
+            {
+                ContractResolver = new DefaultContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                }
+            });
+
+            return jsonExport;
         }
     }
 }
