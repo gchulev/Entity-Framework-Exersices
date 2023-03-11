@@ -15,10 +15,12 @@ namespace ProductShop
             
             using (var context = new ProductShopContext())
             {
-                string inputJson = File.ReadAllText("D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\Product Shop\\ProductShop\\Datasets\\categories.json");
+                string inputJson = File.ReadAllText("D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\Product Shop\\ProductShop\\Datasets\\categories-products.json");
                 //ImportUsers(context, inputJson);
                 //ImportProducts(context, inputJson);
-                ImportCategories(context, inputJson);
+                //ImportCategories(context, inputJson);
+                //ImportCategoryProducts(context, inputJson);
+                
 
             }
         }
@@ -71,6 +73,21 @@ namespace ProductShop
             context.SaveChanges();
 
             return $"Successfully imported {categories.Length}";
+        }
+
+        public static string ImportCategoryProducts(ProductShopContext context, string inputJson)
+        {
+            var mapper = ProvideMapper();
+
+            ImportCategoryProductDto[] categoriesProductsList = JsonConvert.DeserializeObject<ImportCategoryProductDto[]>(inputJson)!;
+
+            CategoryProduct[] categoryProducts = categoriesProductsList.Select(cp => mapper.Map<CategoryProduct>(cp)).ToArray();
+
+            context.AddRange(categoryProducts);
+
+            context.SaveChanges();
+
+            return $"Successfully imported {categoryProducts.Length}";
         }
     }
 }
