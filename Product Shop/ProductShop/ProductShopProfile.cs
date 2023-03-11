@@ -9,8 +9,15 @@ namespace ProductShop
     {
         public ProductShopProfile() 
         {
-            CreateMap<User, ImportUsersDto>();
-            CreateMap<ImportUsersDto, User>();
+            // Users mapping
+            CreateMap<User, ImportUserDto>();
+            CreateMap<ImportUserDto, User>();
+
+            // Products mapping
+            CreateMap<ImportProductDto, Product>();
+
+            // Categories mapping
+            CreateMap<ImportCategorieDto, Category>();
         }
     }
 }

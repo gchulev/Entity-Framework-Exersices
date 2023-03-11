@@ -21,7 +21,7 @@
         public decimal Price { get; set; }
 
         [ForeignKey(nameof(Seller))]
-        public int SellerId { get; set; }
+        public int? SellerId { get; set; }
         public User Seller { get; set; } = null!;
 
         [ForeignKey(nameof(Buyer))]

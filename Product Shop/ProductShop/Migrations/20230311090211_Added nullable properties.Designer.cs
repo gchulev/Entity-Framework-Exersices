@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductShop.Data;
 
@@ -11,9 +12,10 @@ using ProductShop.Data;
 namespace ProductShop.Migrations
 {
     [DbContext(typeof(ProductShopContext))]
-    partial class ProductShopContextModelSnapshot : ModelSnapshot
+    [Migration("20230311090211_Added nullable properties")]
+    partial class Addednullableproperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace ProductShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ProductShop.Models.CategoryProduct", b =>
@@ -51,7 +53,7 @@ namespace ProductShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CategoriesProducts", (string)null);
+                    b.ToTable("CategoriesProducts");
                 });
 
             modelBuilder.Entity("ProductShop.Models.Product", b =>
@@ -81,7 +83,7 @@ namespace ProductShop.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ProductShop.Models.User", b =>
@@ -104,7 +106,7 @@ namespace ProductShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ProductShop.Models.CategoryProduct", b =>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using ProductShop.Models;
 namespace ProductShop.Data
 {
@@ -49,6 +50,16 @@ namespace ProductShop.Data
                       .WithOne(x => x.Seller)
                       .HasForeignKey(x => x.SellerId)
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.Property(p => p.BuyerId)
+                 .IsRequired(false);
+
+                entity.Property(p => p.SellerId)
+                .IsRequired(false);
+
             });
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace ProductShop.DTOs.Import
 {
-    public class ImportUsersDto
+    public class ImportUserDto
     {
         public string? FirstName { get; set; }
 
