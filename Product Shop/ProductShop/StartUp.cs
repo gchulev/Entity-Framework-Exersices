@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
+using Microsoft.EntityFrameworkCore;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -24,7 +26,8 @@ namespace ProductShop
                 //ImportCategories(context, inputJson);
                 //ImportCategoryProducts(context, inputJson);
 
-                Console.WriteLine(GetProductsInRange(context));
+                //Console.WriteLine(GetProductsInRange(context));
+                Console.WriteLine(GetSoldProducts(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -34,6 +37,8 @@ namespace ProductShop
 
             return mapper;
         }
+
+        #region Imports
         public static string ImportUsers(ProductShopContext context, string inputJson)
         {
 
@@ -92,7 +97,9 @@ namespace ProductShop
 
             return $"Successfully imported {categoryProducts.Length}";
         }
+        #endregion
 
+        #region Esports
         public static string GetProductsInRange(ProductShopContext context)
         {
             var mapper = ProvideMapper();
@@ -113,5 +120,37 @@ namespace ProductShop
 
             return jsonExport;
         }
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            var mapper = ProvideMapper();
+
+            var selectedUsers = context.Users
+                .Include(p => p.ProductsSold)
+                .Where(u => u.ProductsSold.Count > 0)
+                .OrderBy(u => u.LastName)
+                .ThenBy(u => u.FirstName)
+                .ToArray()
+                .Where(u => u.ProductsSold.All(p => p.Buyer != null))
+                
+                .ToArray();
+
+            var result = selectedUsers.Select(u => mapper.Map<ExportUserDto>(u)).ToList();
+
+            var contractResolver = new DefaultContractResolver()
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+
+            var serializeOptions = new JsonSerializerSettings()
+            {
+                ContractResolver = contractResolver,
+                Formatting = Formatting.Indented
+            };
+
+            string jsonResult = JsonConvert.SerializeObject(result, serializeOptions);
+
+            return jsonResult;
+        }
+        #endregion
     }
 }

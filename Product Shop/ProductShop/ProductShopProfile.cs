@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-using AutoMapper;
+﻿using AutoMapper;
 
 using ProductShop.DTOs.Export;
 using ProductShop.DTOs.Import;
@@ -15,11 +13,17 @@ namespace ProductShop
             // Users mapping
             CreateMap<User, ImportUserDto>();
             CreateMap<ImportUserDto, User>();
+            CreateMap<User, ExportUserDto>()
+                .ForMember(d => d.SoldProducts, opt => opt.MapFrom(src => src.ProductsSold));
 
             // Products mapping
             CreateMap<ImportProductDto, Product>();
             CreateMap<Product, ExportProductDto>()
                 .ForMember(d => d.Seller, opt => opt.MapFrom(src => $"{src.Seller.FirstName} {src.Seller.LastName}"));
+
+            CreateMap<Product, ExportBoughtProductDto>()
+                .ForMember(d => d.BuyerFirstName, opt => opt.MapFrom(src => src.Buyer.FirstName))
+                .ForMember(d => d.BuyerLastName, opt => opt.MapFrom(src => src.Buyer.LastName));
 
             // Categories mapping
             CreateMap<ImportCategorieDto, Category>();
