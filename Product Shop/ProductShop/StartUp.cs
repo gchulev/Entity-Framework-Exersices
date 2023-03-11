@@ -27,7 +27,8 @@ namespace ProductShop
                 //ImportCategoryProducts(context, inputJson);
 
                 //Console.WriteLine(GetProductsInRange(context));
-                Console.WriteLine(GetSoldProducts(context));
+                //Console.WriteLine(GetSoldProducts(context));
+                Console.WriteLine(GetCategoriesByProductsCount(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -151,6 +152,33 @@ namespace ProductShop
 
             return jsonResult;
         }
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var mapper = ProvideMapper();
+
+            var result = context.Categories
+                .Include(c => c.CategoriesProducts)
+                .ThenInclude(cp => cp.Product)
+                .OrderByDescending(c => c.CategoriesProducts.Count)
+                .Select(c => mapper.Map<ExportCateogryByProductDto>(c))
+                .ToArray();
+
+            var contractResolver = new DefaultContractResolver()
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+
+            var serializeOptions = new JsonSerializerSettings()
+            {
+                ContractResolver = contractResolver,
+                Formatting = Formatting.Indented
+            };
+
+            string jsonResult = JsonConvert.SerializeObject(result, serializeOptions);
+
+            return jsonResult;
+        }
+
         #endregion
     }
 }
