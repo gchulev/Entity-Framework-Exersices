@@ -16,9 +16,11 @@ namespace CarDealer
         {
             using (var context = new CarDealerContext())
             {
-                string inputJson = File.ReadAllText("D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\Car Dealer\\CarDealer\\Datasets\\suppliers.json");
+                string inputJson = File.ReadAllText("D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\Car Dealer\\CarDealer\\Datasets\\parts.json");
 
-                ImportSuppliers(context, inputJson);
+                //ImportSuppliers(context, inputJson);
+                ImportParts(context, inputJson);
+
             }
         }
         private static IMapper ProvideMapper()
@@ -43,6 +45,21 @@ namespace CarDealer
             context.SaveChanges();
 
             return $"Successfully imported {suppliers.Length}.";
+        }
+        public static string ImportParts(CarDealerContext context, string inputJson)
+        {
+            IMapper mapper = ProvideMapper();
+
+            ImportPartDto[] importPartsDto = JsonConvert.DeserializeObject<ImportPartDto[]>(inputJson)!;
+
+            Part[] parts = importPartsDto.Where(p => context.Suppliers.Find(p.SupplierId) != null)
+                .Select(p => mapper.Map<Part>(p))
+                .ToArray();
+
+            context.Parts.AddRange(parts);
+            context.SaveChanges();
+
+            return $"Successfully imported {parts.Length}.";
         }
         #endregion
 
