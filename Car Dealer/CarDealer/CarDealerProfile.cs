@@ -31,6 +31,10 @@ namespace CarDealer
 
             CreateMap<Supplier, ExportSupplierDto>()
                  .ForMember(d => d.PartsCount, opt => opt.MapFrom(src => src.Parts.Count));
+
+            CreateMap<Car, ExportCar2ndDto>();
+
+            CreateMap<Part, ExportPartd2ndDto>();
         }
     }
 }

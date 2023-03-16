@@ -31,7 +31,8 @@ namespace CarDealer
 
                 //Console.WriteLine(GetOrderedCustomers(context));
                 //Console.WriteLine(GetCarsFromMakeToyota(context));
-                Console.WriteLine(GetLocalSuppliers(context));
+                //Console.WriteLine(GetLocalSuppliers(context));
+                Console.WriteLine(GetCarsWithTheirListOfParts(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -192,6 +193,32 @@ namespace CarDealer
             ExportSupplierDto[] suppliersDto = suppliers.Select(s => mapper.Map<ExportSupplierDto>(s)).ToArray();
 
             string jsonResult = JsonConvert.SerializeObject(suppliersDto, Formatting.Indented);
+
+            return jsonResult;
+        }
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            IMapper mapper = ProvideMapper();
+
+            var cars = context.Cars
+                .Include(c => c.PartsCars)
+                .Select(c => new
+                {
+                    car = new ExportCar2ndDto()
+                    {
+                        Make = c.Make,
+                        Model = c.Model,
+                        TraveledDistance = c.TraveledDistance,
+                    },
+                    parts = c.PartsCars.Select(pc => new ExportPartd2ndDto()
+                    {
+                        Name = pc.Part.Name,
+                        Price = pc.Part.Price.ToString(".00")
+                    })
+                })
+                .ToArray();
+
+            string jsonResult = JsonConvert.SerializeObject(cars, Formatting.Indented);
 
             return jsonResult;
         }
