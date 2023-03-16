@@ -5,6 +5,7 @@ using System.Runtime.Versioning;
 using AutoMapper;
 
 using CarDealer.Data;
+using CarDealer.DTOs.Export;
 using CarDealer.DTOs.Import;
 using CarDealer.Models;
 
@@ -27,6 +28,8 @@ namespace CarDealer
                 //Console.WriteLine(ImportCars(context, inputJson));
                 //ImportCustomers(context, inputJson);
                 //ImportSales(context, inputJson);
+
+                Console.WriteLine(GetOrderedCustomers(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -121,7 +124,7 @@ namespace CarDealer
             IMapper mapper = ProvideMapper();
             List<ImportCustomerDto> customersDtoColl = JsonConvert.DeserializeObject<List<ImportCustomerDto>>(inputJson)!;
 
-            Customer[] customers = customersDtoColl.Select( c => mapper.Map<Customer>(c)).ToArray();
+            Customer[] customers = customersDtoColl.Select(c => mapper.Map<Customer>(c)).ToArray();
 
             context.Customers.AddRange(customers);
             context.SaveChanges();
@@ -143,10 +146,21 @@ namespace CarDealer
         #endregion
 
         #region Data Export
-        //public static string GetOrderedCustomers(CarDealerContext context)
-        //{
+        public static string GetOrderedCustomers(CarDealerContext context)
+        {
+            IMapper mapper = ProvideMapper();
 
-        //}
+            Customer[] customers = context.Customers
+                .OrderBy(c => c.BirthDate)
+                .ThenBy(c => c.IsYoungDriver)
+                .ToArray();
+
+            ExportCustomerDto[] customersDto = customers.Select(c => mapper.Map<ExportCustomerDto>(c)).ToArray();
+
+            string customersJson = JsonConvert.SerializeObject(customersDto, Formatting.Indented);
+
+            return customersJson;
+        }
         #endregion
     }
 }
