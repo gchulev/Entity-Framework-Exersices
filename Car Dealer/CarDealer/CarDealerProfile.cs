@@ -17,7 +17,7 @@ namespace CarDealer
             CreateMap<ImportPartDto, Part>();
 
             CreateMap<ImportCarDto, Car>()
-                .ForMember(d => d.TravelledDistance, opt => opt.MapFrom(src => src.TraveledDistance));
+                .ForMember(d => d.TraveledDistance, opt => opt.MapFrom(src => src.TraveledDistance));
 
             CreateMap<ImportCustomerDto, Customer>();
 
@@ -25,6 +25,11 @@ namespace CarDealer
 
             CreateMap<Customer, ExportCustomerDto>()
                 .ForMember(d => d.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToString("dd/MM/yyyy")));
+
+            CreateMap<Car, ExportCarDto>()
+                .ForMember(d => d.TraveledDistance, opt => opt.MapFrom(src => src.TraveledDistance));
+
+           
         }
     }
 }
