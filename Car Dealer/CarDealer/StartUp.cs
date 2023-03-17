@@ -32,7 +32,8 @@ namespace CarDealer
                 //Console.WriteLine(GetOrderedCustomers(context));
                 //Console.WriteLine(GetCarsFromMakeToyota(context));
                 //Console.WriteLine(GetLocalSuppliers(context));
-                Console.WriteLine(GetCarsWithTheirListOfParts(context));
+                //Console.WriteLine(GetCarsWithTheirListOfParts(context));
+                Console.WriteLine(GetTotalSalesByCustomer(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -220,6 +221,27 @@ namespace CarDealer
 
             string jsonResult = JsonConvert.SerializeObject(cars, Formatting.Indented);
 
+            return jsonResult;
+        }
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            IMapper mapper = ProvideMapper();
+
+            var customers = context.Customers
+                .Include(c => c.Sales)
+                .ThenInclude(c => c.Car)
+                .Where(c => c.Sales.Count >= 1)
+                .Select(c => new
+                {
+                    fullName = c.Name,
+                    boughtCars = c.Sales.Count,
+                    spentMoney = c.Sales.SelectMany(s => s.Car.PartsCars.Select(cp => cp.Part.Price)).Sum()
+                })
+                .OrderByDescending(c => c.spentMoney)
+                .ThenByDescending(c => c.boughtCars)
+                .ToArray();
+
+            string jsonResult = JsonConvert.SerializeObject(customers, Formatting.Indented);
             return jsonResult;
         }
         #endregion
