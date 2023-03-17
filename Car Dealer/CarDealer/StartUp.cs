@@ -10,6 +10,7 @@ using CarDealer.DTOs.Import;
 using CarDealer.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 using Newtonsoft.Json;
 
@@ -33,7 +34,8 @@ namespace CarDealer
                 //Console.WriteLine(GetCarsFromMakeToyota(context));
                 //Console.WriteLine(GetLocalSuppliers(context));
                 //Console.WriteLine(GetCarsWithTheirListOfParts(context));
-                Console.WriteLine(GetTotalSalesByCustomer(context));
+                //Console.WriteLine(GetTotalSalesByCustomer(context));
+                Console.WriteLine(GetSalesWithAppliedDiscount(context));
             }
         }
         private static IMapper ProvideMapper()
@@ -242,6 +244,31 @@ namespace CarDealer
                 .ToArray();
 
             string jsonResult = JsonConvert.SerializeObject(customers, Formatting.Indented);
+            return jsonResult;
+        }
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            IMapper mapper = ProvideMapper();
+
+            var sales = context.Sales
+                .AsNoTracking()
+                .Select(s => new
+                {
+                    car = new
+                    {
+                        s.Car.Make,
+                        s.Car.Model,
+                        s.Car.TraveledDistance
+                    },
+                    customerName = s.Customer.Name,
+                    discount = s.Discount.ToString("f2"),
+                    price = s.Car.PartsCars.Select(pc => pc.Part.Price).Sum().ToString("f2"),
+                    priceWithDiscount = (s.Car.PartsCars.Select(pc => pc.Part.Price).Sum() - s.Car.PartsCars.Select(pc => pc.Part.Price).Sum() * (s.Discount / 100)).ToString("f2")
+                })
+                .Take(10)
+                .ToArray();
+
+            string jsonResult = JsonConvert.SerializeObject(sales, Formatting.Indented);
             return jsonResult;
         }
         #endregion
