@@ -18,11 +18,12 @@ namespace ProductShop
         {
             using (var context = new ProductShopContext())
             {
-                string inputXmlPath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\ProductShopXml\ProductShop\Datasets\products.xml";
+                string inputXmlPath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\ProductShopXml\ProductShop\Datasets\categories.xml";
+                string inputXml = File.ReadAllText(inputXmlPath);
 
                 //Console.WriteLine(ImportUsers(context, inputXmlPath));
-                Console.WriteLine(ImportProducts(context, inputXmlPath));
-                //Console.WriteLine(ImportCategories(context, inputXmlPath));
+                //Console.WriteLine(ImportProducts(context, inputXmlPath));
+                Console.WriteLine(ImportCategories(context, inputXml));
             }
 
         }
@@ -63,9 +64,18 @@ namespace ProductShop
 
             return $"Successfully imported {products.Length}";
         }
-        //public static string ImportCategories(ProductShopContext context, string inputXml)
-        //{
+        public static string ImportCategories(ProductShopContext context, string inputXml)
+        {
+            IMapper mapper = CreateMapper();
 
-        //}
+            ImportCategoryDto[] importCategories = XmlHelper.Deserialize<ImportCategoryDto[]>(inputXml, "Categories");
+
+            Category[] categories = importCategories.Select(ic => mapper.Map<Category>(ic)).ToArray();
+
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+
+            return $"Successfully imported {categories.Length}";
+        }
     }
 }
