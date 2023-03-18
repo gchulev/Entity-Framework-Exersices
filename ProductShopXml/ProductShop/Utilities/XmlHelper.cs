@@ -11,7 +11,7 @@ namespace ProductShop.Utilities
 
             XmlSerializer serializer = new XmlSerializer(typeof(T), xmlRoot);
 
-            using (StreamReader reader = new StreamReader(inputXml))
+            using (StringReader reader = new StringReader(inputXml))
             {
                 T serializedObj = (T)serializer.Deserialize(reader)!;
 
