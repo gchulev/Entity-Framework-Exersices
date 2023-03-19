@@ -28,7 +28,8 @@ namespace ProductShop
                 //Console.WriteLine(ImportCategoryProducts(context, inputXml));
 
                 //Console.WriteLine(GetProductsInRange(context));
-                Console.WriteLine(GetSoldProducts(context));
+                //Console.WriteLine(GetSoldProducts(context));
+                Console.WriteLine(GetCategoriesByProductsCount(context));
             }
         }
         private static IMapper CreateMapper()
@@ -90,7 +91,7 @@ namespace ProductShop
             CategoryProduct[] categoryProducts = categoriesProductsDtoList.Where(cp => cp.ProductId != null && cp.CategoryId != null)
                 .Select(cp => mapper.Map<CategoryProduct>(cp)).ToArray();
 
-            context.AddRange(categoryProducts);
+            context.CategoriesProducts.AddRange(categoryProducts);
             context.SaveChanges();
 
             return $"Successfully imported {categoryProducts.Length}";
@@ -126,6 +127,20 @@ namespace ProductShop
             string usersToXml = XmlHelper.Serialize(usersArray, "Users");
 
             return usersToXml;
+        }
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportCategoriesDto[] categoriesDto = context.Categories
+                .OrderByDescending(c => c.CategoryProducts.Select(cp => cp.Product).Count())
+                .ThenBy(c => c.CategoryProducts.Select(cp => cp.Product.Price).Sum())
+                .ProjectTo<ExportCategoriesDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            string categoriesToXml = XmlHelper.Serialize(categoriesDto, "Categories");
+
+            return categoriesToXml;
         }
     }
 }

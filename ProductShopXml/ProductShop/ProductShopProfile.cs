@@ -18,12 +18,16 @@ namespace ProductShop
             // Product
             CreateMap<ImportProductDto, Product>();
             CreateMap<Product, ExportProductDto>()
-                .ForMember(d => d.Buyer, opt => opt.MapFrom(src => src.Buyer != null ? $"{src.Buyer.FirstName} {src.Buyer.LastName}" : null))
+                //.ForMember(d => d.Buyer, opt => opt.MapFrom(src => src.Buyer != null ? $"{src.Buyer.FirstName} {src.Buyer.LastName}" : null))
                 .ForMember(d => d.Price, opt => opt.MapFrom(src => decimal.Parse(src.Price.ToString("0.##"))));
             
 
             // Category
             CreateMap<ImportCategoryDto, Category>();
+            CreateMap<Category, ExportCategoriesDto > ()
+                .ForMember(d => d.Count, opt => opt.MapFrom(src => src.CategoryProducts.Select(p => p.Product).Count()))
+                .ForMember(d => d.AveragePrice, opt => opt.MapFrom(src => src.CategoryProducts.Select(p => p.Product.Price).Average()))
+                .ForMember(d => d.TotalRevenue, opt => opt.MapFrom(src => src.CategoryProducts.Select(p => p.Product.Price).Sum()));
 
             // CategoryProduct
             CreateMap<ImportCategoryProductDto, CategoryProduct>();
