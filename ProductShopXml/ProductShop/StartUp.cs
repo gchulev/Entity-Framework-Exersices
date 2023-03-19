@@ -27,7 +27,8 @@ namespace ProductShop
                 //Console.WriteLine(ImportCategories(context, inputXml));
                 //Console.WriteLine(ImportCategoryProducts(context, inputXml));
 
-                Console.WriteLine(GetProductsInRange(context));
+                //Console.WriteLine(GetProductsInRange(context));
+                Console.WriteLine(GetSoldProducts(context));
             }
         }
         private static IMapper CreateMapper()
@@ -109,6 +110,22 @@ namespace ProductShop
             string serializedXml = XmlHelper.Serialize(products, "Products");
 
             return serializedXml;
+        }
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportUserDto[] usersArray = context.Users
+                .Where(u => u.ProductsSold.Count > 0)
+                .OrderBy(u => u.LastName)
+                .ThenBy(u => u.FirstName)
+                .Take(5)
+                .ProjectTo<ExportUserDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            string usersToXml = XmlHelper.Serialize(usersArray, "Users");
+
+            return usersToXml;
         }
     }
 }
