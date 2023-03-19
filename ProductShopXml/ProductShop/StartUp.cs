@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Runtime.CompilerServices;
+
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
 using Castle.DynamicProxy;
@@ -29,7 +31,8 @@ namespace ProductShop
 
                 //Console.WriteLine(GetProductsInRange(context));
                 //Console.WriteLine(GetSoldProducts(context));
-                Console.WriteLine(GetCategoriesByProductsCount(context));
+                //Console.WriteLine(GetCategoriesByProductsCount(context));
+                Console.WriteLine(GetUsersWithProducts(context));
             }
         }
         private static IMapper CreateMapper()
@@ -44,7 +47,7 @@ namespace ProductShop
 
             using (StreamReader stream = new StreamReader(inputXml))
             {
-                
+
                 ImportUserDto[] users = XmlHelper.Deserialize<ImportUserDto[]>(inputXml, "Users");
 
                 User[] importUsers = users.Select(u => mapper.Map<User>(u)).ToArray();
@@ -141,6 +144,35 @@ namespace ProductShop
             string categoriesToXml = XmlHelper.Serialize(categoriesDto, "Categories");
 
             return categoriesToXml;
+        }
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportUsersDto users = new ExportUsersDto() 
+            {
+                Count = context.Users.Count(u => u.ProductsSold.Count > 0),
+                Users = context.Users
+                .Where(u => u.ProductsSold.Count > 0)
+                .OrderByDescending(u => u.ProductsSold.Count)
+                .Take(10)
+                .Select(u => new ExportUserDto()
+                {
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Age = u.Age,
+                    SoldProducts = new ExportSoldProductsDto()
+                    {
+                        Count = u.ProductsSold.Count,
+                        Products = u.ProductsSold.OrderByDescending(p => p.Price).Select(p => mapper.Map<ExportProductDto>(p)).ToArray()
+                    }
+                })
+                .ToArray()
+            };
+
+            string exportUsersXml = XmlHelper.Serialize(users, "Users");
+
+            return exportUsersXml;
         }
     }
 }
