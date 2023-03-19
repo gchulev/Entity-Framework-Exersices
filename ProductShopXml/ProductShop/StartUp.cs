@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+
+using Castle.DynamicProxy;
+
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 using ProductShop.Data;
+using ProductShop.DTOs.Export;
 using ProductShop.DTOs.Import;
 using ProductShop.Models;
 using ProductShop.Utilities;
@@ -19,9 +25,10 @@ namespace ProductShop
                 //Console.WriteLine(ImportUsers(context, inputXmlPath));
                 //Console.WriteLine(ImportProducts(context, inputXmlPath));
                 //Console.WriteLine(ImportCategories(context, inputXml));
-                Console.WriteLine(ImportCategoryProducts(context, inputXml));
-            }
+                //Console.WriteLine(ImportCategoryProducts(context, inputXml));
 
+                Console.WriteLine(GetProductsInRange(context));
+            }
         }
         private static IMapper CreateMapper()
         {
@@ -86,6 +93,22 @@ namespace ProductShop
             context.SaveChanges();
 
             return $"Successfully imported {categoryProducts.Length}";
+        }
+
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportProductDto[] products = context.Products
+                .Where(p => p.Price >= 500 && p.Price <= 1000)
+                .OrderBy(p => p.Price)
+                .Take(10)
+                .ProjectTo<ExportProductDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            string serializedXml = XmlHelper.Serialize(products, "Products");
+
+            return serializedXml;
         }
     }
 }
