@@ -1,9 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
-
-using AutoMapper;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
 
 using ProductShop.Data;
 using ProductShop.DTOs.Import;
@@ -18,12 +13,13 @@ namespace ProductShop
         {
             using (var context = new ProductShopContext())
             {
-                string inputXmlPath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\ProductShopXml\ProductShop\Datasets\categories.xml";
+                string inputXmlPath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\ProductShopXml\ProductShop\Datasets\categories-products.xml";
                 string inputXml = File.ReadAllText(inputXmlPath);
 
                 //Console.WriteLine(ImportUsers(context, inputXmlPath));
                 //Console.WriteLine(ImportProducts(context, inputXmlPath));
-                Console.WriteLine(ImportCategories(context, inputXml));
+                //Console.WriteLine(ImportCategories(context, inputXml));
+                Console.WriteLine(ImportCategoryProducts(context, inputXml));
             }
 
         }
@@ -76,6 +72,20 @@ namespace ProductShop
             context.SaveChanges();
 
             return $"Successfully imported {categories.Length}";
+        }
+        public static string ImportCategoryProducts(ProductShopContext context, string inputXml)
+        {
+            IMapper mapper = CreateMapper();
+
+            ImportCategoryProductDto[] categoriesProductsDtoList = XmlHelper.Deserialize<ImportCategoryProductDto[]>(inputXml, "CategoryProducts");
+
+            CategoryProduct[] categoryProducts = categoriesProductsDtoList.Where(cp => cp.ProductId != null && cp.CategoryId != null)
+                .Select(cp => mapper.Map<CategoryProduct>(cp)).ToArray();
+
+            context.AddRange(categoryProducts);
+            context.SaveChanges();
+
+            return $"Successfully imported {categoryProducts.Length}";
         }
     }
 }
