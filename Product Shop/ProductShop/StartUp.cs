@@ -20,7 +20,8 @@ namespace ProductShop
 
             using (var context = new ProductShopContext())
             {
-                string inputJson = File.ReadAllText("D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\Product Shop\\ProductShop\\Datasets\\categories-products.json");
+                //JSON Part
+                //string inputJson = File.ReadAllText("D:\\Visual Studio\\Projects\\EntityFrameWork Exersices\\Product Shop\\ProductShop\\Datasets\\categories-products.json");
                 //ImportUsers(context, inputJson);
                 //ImportProducts(context, inputJson);
                 //ImportCategories(context, inputJson);
@@ -29,7 +30,11 @@ namespace ProductShop
                 //Console.WriteLine(GetProductsInRange(context));
                 //Console.WriteLine(GetSoldProducts(context));
                 //Console.WriteLine(GetCategoriesByProductsCount(context));
-                Console.WriteLine(GetUsersWithProducts(context));
+                //Console.WriteLine(GetUsersWithProducts(context));
+
+                // XML part
+
+
             }
         }
         private static IMapper ProvideMapper()

@@ -14,13 +14,13 @@ namespace ProductShop.Data
         {
         }
 
-        public DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Category> Categories { get; set; } = null!;
 
-        public DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; } = null!;
 
-        public DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
-        public DbSet<CategoryProduct> CategoriesProducts { get; set; } = null!;
+        public virtual DbSet<CategoryProduct> CategoriesProducts { get; set; } = null!;
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
