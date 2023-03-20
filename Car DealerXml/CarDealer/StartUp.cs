@@ -8,6 +8,8 @@ using CarDealer.Models;
 
 using Castle.Core.Resource;
 
+using Microsoft.EntityFrameworkCore;
+
 using ProductShop.Utilities;
 
 namespace CarDealer
@@ -29,7 +31,8 @@ namespace CarDealer
 
                 //Console.WriteLine(GetCarsWithDistance(context));
                 //Console.WriteLine(GetCarsFromMakeBmw(context));
-                Console.WriteLine(GetLocalSuppliers(context));
+                //Console.WriteLine(GetLocalSuppliers(context));
+                Console.WriteLine(GetCarsWithTheirListOfParts(context));
 
             }
 
@@ -178,6 +181,33 @@ namespace CarDealer
                 .ToArray();
 
             string xmlResult = XmlHelper.Serialize(suppliers, "suppliers");
+
+            return xmlResult;
+        }
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportCarWithPartsDto[] carsWithParts = context.Cars
+                .Select(c => new ExportCarWithPartsDto()
+                {
+                    Make = c.Make,
+                    Model = c.Model,
+                    TraveledDistance = c.TraveledDistance,
+                    Parts = c.PartsCars.Select(cp => new ExportPartDto()
+                    {
+                        Name = cp.Part.Name,
+                        Price = cp.Part.Price
+                    })
+                    .OrderByDescending(p => p.Price)
+                    .ToArray()
+                })
+                .OrderByDescending(c => c.TraveledDistance)
+                .ThenBy(c => c.Model)
+                .Take(5)
+                .ToArray();
+
+            string xmlResult = XmlHelper.Serialize(carsWithParts, "cars");
 
             return xmlResult;
         }
