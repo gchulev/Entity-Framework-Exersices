@@ -16,13 +16,14 @@ namespace CarDealer
         {
             using (var context = new CarDealerContext())
             {
-                string filePath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\Car DealerXml\CarDealer\Datasets\customers.xml";
+                string filePath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\Car DealerXml\CarDealer\Datasets\sales.xml";
                 string inputXml = File.ReadAllText(filePath);
 
                 //Console.WriteLine(ImportSuppliers(context, inputXml));
                 //Console.WriteLine(ImportParts(context, inputXml));
                 //Console.WriteLine(ImportCars(context, inputXml));
-                Console.WriteLine(ImportCustomers(context, inputXml));
+                //Console.WriteLine(ImportCustomers(context, inputXml));
+                Console.WriteLine(ImportSales(context, inputXml));
             }
 
         }
@@ -112,6 +113,19 @@ namespace CarDealer
             context.SaveChanges();
 
             return $"Successfully imported {customers.Length}";
+        }
+        public static string ImportSales(CarDealerContext context, string inputXml)
+        {
+            IMapper mapper = CreateMapper();
+
+            ImportSaleDto[] importSales = XmlHelper.Deserialize<ImportSaleDto[]>(inputXml, "Sales");
+
+            Sale[] sales = importSales.Where(s => context.Cars.Any(c => c.Id == s.CarId)).Select(s => mapper.Map<Sale>(s)).ToArray();
+
+            context.Sales.AddRange(sales);
+            context.SaveChanges();
+
+            return $"Successfully imported {sales.Length}";
         }
     }
 }
