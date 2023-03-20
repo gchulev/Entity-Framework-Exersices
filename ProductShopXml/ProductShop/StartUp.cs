@@ -32,7 +32,7 @@ namespace ProductShop
                 //Console.WriteLine(GetProductsInRange(context));
                 //Console.WriteLine(GetSoldProducts(context));
                 //Console.WriteLine(GetCategoriesByProductsCount(context));
-                Console.WriteLine(GetUsersWithProducts(context));
+                //Console.WriteLine(GetUsersWithProducts(context));
             }
         }
         private static IMapper CreateMapper()
