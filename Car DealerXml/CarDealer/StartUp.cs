@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 using CarDealer.Data;
+using CarDealer.DTOs.Export;
 using CarDealer.DTOs.Import;
 using CarDealer.Models;
 
@@ -23,7 +25,9 @@ namespace CarDealer
                 //Console.WriteLine(ImportParts(context, inputXml));
                 //Console.WriteLine(ImportCars(context, inputXml));
                 //Console.WriteLine(ImportCustomers(context, inputXml));
-                Console.WriteLine(ImportSales(context, inputXml));
+                //Console.WriteLine(ImportSales(context, inputXml));
+
+                Console.WriteLine(GetCarsWithDistance(context));
             }
 
         }
@@ -37,6 +41,7 @@ namespace CarDealer
             return mapper;
         }
 
+        #region Imports
         public static string ImportSuppliers(CarDealerContext context, string inputXml)
         {
             IMapper mapper = CreateMapper();
@@ -127,5 +132,24 @@ namespace CarDealer
 
             return $"Successfully imported {sales.Length}";
         }
+        #endregion
+
+        #region Exports
+        public static string GetCarsWithDistance(CarDealerContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportCarDto[] cars = context.Cars
+                .Where(c => c.TraveledDistance > 2000000)
+                .OrderBy(c => c.Make)
+                .ThenBy(c => c.Model)
+                .Take(10)
+                .ProjectTo<ExportCarDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            string xmlResult = XmlHelper.Serialize(cars, "cars");
+            return xmlResult;
+        }
+        #endregion
     }
 }
