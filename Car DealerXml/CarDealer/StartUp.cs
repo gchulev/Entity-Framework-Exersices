@@ -4,8 +4,7 @@ using CarDealer.Data;
 using CarDealer.DTOs.Import;
 using CarDealer.Models;
 
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.Extensions.DependencyInjection;
+using Castle.Core.Resource;
 
 using ProductShop.Utilities;
 
@@ -17,12 +16,13 @@ namespace CarDealer
         {
             using (var context = new CarDealerContext())
             {
-                string filePath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\Car DealerXml\CarDealer\Datasets\cars.xml";
+                string filePath = @"D:\Visual Studio\Projects\EntityFrameWork Exersices\Car DealerXml\CarDealer\Datasets\customers.xml";
                 string inputXml = File.ReadAllText(filePath);
 
                 //Console.WriteLine(ImportSuppliers(context, inputXml));
                 //Console.WriteLine(ImportParts(context, inputXml));
-                Console.WriteLine(ImportCars(context, inputXml));
+                //Console.WriteLine(ImportCars(context, inputXml));
+                Console.WriteLine(ImportCustomers(context, inputXml));
             }
 
         }
@@ -84,20 +84,34 @@ namespace CarDealer
                     {
                         PartCar parCar = new PartCar()
                         {
-                            PartId = importPartDto.PartId,
+                            PartId = importPartDto!.PartId,
                         };
 
                         car.PartsCars.Add(parCar);
                     }
+
+                    
                 }
                 cars.Add(car);
             }
 
             context.Cars.AddRange(cars);
-            var test = context.PartsCars.Count();
             context.SaveChanges();
 
             return $"Successfully imported {cars.Count}";
+        }
+        public static string ImportCustomers(CarDealerContext context, string inputXml)
+        {
+            IMapper mapper = CreateMapper();
+
+            ImportCustomerDto[] importCustomerDto = XmlHelper.Deserialize<ImportCustomerDto[]>(inputXml, "Customers");
+
+            Customer[] customers = importCustomerDto.Select(c => mapper.Map<Customer>(c)).ToArray();
+
+            context.Customers.AddRange(customers);
+            context.SaveChanges();
+
+            return $"Successfully imported {customers.Length}";
         }
     }
 }
