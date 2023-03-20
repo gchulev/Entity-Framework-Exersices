@@ -20,6 +20,7 @@ namespace CarDealer
             // Car
             CreateMap<ImportCarDto, Car>();
             CreateMap<Car, ExportCarDto>();
+            CreateMap<Car, ExportBmwCarsDto>();
 
             // Customer
             CreateMap<ImportCustomerDto, Customer>();
