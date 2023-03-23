@@ -32,7 +32,9 @@ namespace CarDealer
                 //Console.WriteLine(GetCarsWithDistance(context));
                 //Console.WriteLine(GetCarsFromMakeBmw(context));
                 //Console.WriteLine(GetLocalSuppliers(context));
-                Console.WriteLine(GetCarsWithTheirListOfParts(context));
+                //Console.WriteLine(GetCarsWithTheirListOfParts(context));
+                //Console.WriteLine(GetTotalSalesByCustomer(context));
+                Console.WriteLine(GetSalesWithAppliedDiscount(context));
 
             }
 
@@ -102,7 +104,7 @@ namespace CarDealer
                         car.PartsCars.Add(parCar);
                     }
 
-                    
+
                 }
                 cars.Add(car);
             }
@@ -188,26 +190,85 @@ namespace CarDealer
         {
             IMapper mapper = CreateMapper();
 
-            ExportCarWithPartsDto[] carsWithParts = context.Cars
+            // Without AutoMapper
+            //ExportCarWithPartsDto[] carsWithParts = context.Cars
+            //    .Select(c => new ExportCarWithPartsDto()
+            //    {
+            //        Make = c.Make,
+            //        Model = c.Model,
+            //        TraveledDistance = c.TraveledDistance,
+            //        Parts = c.PartsCars.Select(cp => new ExportPartDto()
+            //        {
+            //            Name = cp.Part.Name,
+            //            Price = cp.Part.Price
+            //        })
+            //        .OrderByDescending(p => p.Price)
+            //        .ToArray()
+            //    })
+            //    .OrderByDescending(c => c.TraveledDistance)
+            //    .ThenBy(c => c.Model)
+            //    .Take(5)
+            //    .ToArray();
+
+            // With AutoMapper
+            ExportCarWithPartsDto[] carsWithPartsExport = context.Cars
+                .Include(c => c.PartsCars)
+                .ThenInclude(cp => cp.Part)
+                .Select(c => mapper.Map<ExportCarWithPartsDto>(c))
+                .Take(5)
+                .ToArray();
+
+            var carsWithParts = carsWithPartsExport
+                .OrderByDescending(c => c.TraveledDistance)
+                .ThenBy(c => c.Model)
                 .Select(c => new ExportCarWithPartsDto()
                 {
                     Make = c.Make,
                     Model = c.Model,
                     TraveledDistance = c.TraveledDistance,
-                    Parts = c.PartsCars.Select(cp => new ExportPartDto()
-                    {
-                        Name = cp.Part.Name,
-                        Price = cp.Part.Price
-                    })
-                    .OrderByDescending(p => p.Price)
-                    .ToArray()
+                    Parts = c.Parts.OrderByDescending(p => p.Price).ToArray()
                 })
-                .OrderByDescending(c => c.TraveledDistance)
-                .ThenBy(c => c.Model)
-                .Take(5)
                 .ToArray();
 
             string xmlResult = XmlHelper.Serialize(carsWithParts, "cars");
+
+            return xmlResult;
+        }
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            IMapper mapper = CreateMapper();
+            ExportCustomerDto[] customers = context.Customers
+                //.Include(c => c.Sales)
+                //.ThenInclude(s => s.Car)
+                //.ThenInclude(s => s.PartsCars)
+                //.ThenInclude(pc => pc.Part)
+                .Where(c => c.Sales.Count > 0)
+                .Select(c => new ExportCustomerDto()
+                {
+                    FullName = c.Name,
+                    BoughtCars = c.Sales.Count(s => s.Car != null),
+                    //SpentMoney = c.Sales.SelectMany(s => s.Car.PartsCars.Select(pc => pc.Part.Price)).Sum()
+                    SpentMoney = c.IsYoungDriver
+                                     ? c.Sales.SelectMany(s => s.Car.PartsCars.Select(pc => pc.Part.Price)).Sum() - c.Sales.SelectMany(s => s.Car.PartsCars.Select(pc => pc.Part.Price)).Sum() * (c.Sales.First(s => s.CustomerId == c.Id).Discount) / 100
+                                     : c.Sales.SelectMany(s => s.Car.PartsCars.Select(pc => pc.Part.Price)).Sum()
+                })
+                .OrderByDescending(ec => ec.SpentMoney)
+                .ToArray();
+
+
+            string xmlResult = XmlHelper.Serialize(customers, "customers");
+
+            return xmlResult;
+        }
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            IMapper mapper = CreateMapper();
+
+            ExportSaleDto[] sales = context.Sales
+                .ProjectTo<ExportSaleDto>(mapper.ConfigurationProvider)
+                .ToArray();
+
+            string xmlResult = XmlHelper.Serialize(sales, "sales");
 
             return xmlResult;
         }
