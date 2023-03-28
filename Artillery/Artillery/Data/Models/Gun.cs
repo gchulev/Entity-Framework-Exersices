@@ -30,7 +30,7 @@ namespace Artillery.Data.Models
         [Range(2.00, 35.00)]
         public double BarrelLength { get; set; }
 
-        public int NumberBuild { get; set; }
+        public int? NumberBuild { get; set; }
 
         [Required]
         [Range(1, 100000)]
